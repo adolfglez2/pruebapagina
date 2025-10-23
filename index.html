@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Descargas – Producciones</title>
+  <style>
+    :root{ --bg:#0b0b0f; --card:#12121a; --text:#f6f7fb; --muted:#b8b9c3; --accent:#ffd048; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial; 
+      background: radial-gradient(1200px 800px at 10% -10%, #1b1b27 0%, rgba(27,27,39,0) 60%),
+                  radial-gradient(1000px 600px at 110% 0%, #1b1b27 0%, rgba(27,27,39,0) 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{ padding:28px 20px 8px; text-align:center; }
+    header h1{ margin:0; font-size:clamp(20px,4vw,36px); letter-spacing:.5px }
+    header p{ margin:6px 0 0; color:var(--muted) }
+    .grid{ width:min(1200px, 92vw); margin:24px auto 60px; display:grid; gap:18px;
+            grid-template-columns: repeat(12, 1fr); }
+    .card{ grid-column: span 12; background:linear-gradient(180deg, #171722, #101017);
+            border:1px solid rgba(255,255,255,.06); border-radius:18px; overflow:hidden; position:relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,.35); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; cursor:pointer; }
+    .card:hover{ transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0,0,0,.45); border-color: rgba(255,255,255,.12) }
+    .thumb{ aspect-ratio: 16/9; width:100%; object-fit:cover; display:block }
+    .meta{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px }
+    .title{ font-weight:700; font-size:clamp(14px,2.5vw,18px) }
+    .btn{ border:none; background:var(--accent); color:#2b2b2b; font-weight:800; letter-spacing:.3px; padding:10px 14px; border-radius:12px; cursor:pointer; transition:filter .18s ease; }
+    .btn:hover{ filter:brightness(.95) }
+    @media (min-width:700px){ .card{ grid-column: span 6 } }
+    @media (min-width:1024px){ .card{ grid-column: span 4 } }
+    .toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(20px);
+      background:#12121a; color:var(--text); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:10px 14px;
+      box-shadow:0 10px 25px rgba(0,0,0,.35); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s }
+    .toast.show{ opacity:1; transform:translateX(-50%) translateY(0) }
+    .watermark{position:fixed; inset:auto 10px 10px auto; color:var(--muted); font-size:12px; opacity:.6}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>La mejor selección – Descargas directas</h1>
+    <p>Clic en una portada para abrir/descargar desde Google Drive.</p>
+  </header>
+
+  <main class="grid" id="gallery">
+    
+    <article class="card" data-drive="https://drive.google.com/drive/folders/1vmgsi1GfMT7ufLFTLA67eKMrw-QPJDfs?usp=drive_link">
+      <img class="thumb" src="img/portada-1.jpeg" alt="Portada" />
+      <div class="meta">
+        <span class="title">Compilado</span>
+        <button class="btn" data-open>Descargar</button>
+      </div>
+    </article>
+    <article class="card" data-drive="https://drive.google.com/drive/folders/1vmgsi1GfMT7ufLFTLA67eKMrw-QPJDfs?usp=drive_link">
+      <img class="thumb" src="img/portada-2.jpeg" alt="Portada" />
+      <div class="meta">
+        <span class="title">Compilado</span>
+        <button class="btn" data-open>Descargar</button>
+      </div>
+    </article>
+    <article class="card" data-drive="https://drive.google.com/drive/folders/1vmgsi1GfMT7ufLFTLA67eKMrw-QPJDfs?usp=drive_link">
+      <img class="thumb" src="img/portada-3.jpeg" alt="Portada" />
+      <div class="meta">
+        <span class="title">Compilado</span>
+        <button class="btn" data-open>Descargar</button>
+      </div>
+    </article>
+    <article class="card" data-drive="https://drive.google.com/drive/folders/1vmgsi1GfMT7ufLFTLA67eKMrw-QPJDfs?usp=drive_link">
+      <img class="thumb" src="img/portada-4.jpeg" alt="Portada" />
+      <div class="meta">
+        <span class="title">Compilado</span>
+        <button class="btn" data-open>Descargar</button>
+      </div>
+    </article>
+    <article class="card" data-drive="https://drive.google.com/drive/folders/1vmgsi1GfMT7ufLFTLA67eKMrw-QPJDfs?usp=drive_link">
+      <img class="thumb" src="img/portada-5.jpeg" alt="Portada" />
+      <div class="meta">
+        <span class="title">Compilado</span>
+        <button class="btn" data-open>Descargar</button>
+      </div>
+    </article>
+  </main>
+
+  <div class="toast" id="toast">Abriendo Google Drive…</div>
+  <div class="watermark">Hecho con ♥</div>
+
+  <script>
+    (function(){
+      const toast = document.getElementById('toast');
+      function showToast(){ toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1500); }
+      function openDrive(url){ window.open(url, '_blank', 'noopener'); showToast(); }
+      document.querySelectorAll('.card').forEach(card=>{
+        const url = card.getAttribute('data-drive');
+        card.addEventListener('click', e=>{ if(e.target && e.target.hasAttribute('data-open')) return; openDrive(url); });
+        const btn = card.querySelector('[data-open]');
+        btn.addEventListener('click', e=>{ e.stopPropagation(); openDrive(url); });
+      });
+    })();
+  </script>
+</body>
+</html>
